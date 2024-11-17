@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unminify JS, CSS, HTML</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output-container {
+            margin-top: 20px;
+        }
+        .output {
+            background-color: #ffffff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Unminify JS, CSS, HTML</h1>
+    <p>Paste your minified code below, select the code type, and click "Unminify".</p>
+
+    <!-- Input Area -->
+    <textarea id="inputCode" placeholder="Enter your minified code here..."></textarea>
+    <select id="codeType">
+        <option value="js">JavaScript</option>
+        <option value="css">CSS</option>
+        <option value="html">HTML</option>
+    </select>
+    <button onclick="unminifyCode()">Unminify</button>
+
+    <!-- Output Area -->
+    <div class="output-container">
+        <h2>Unminified Code:</h2>
+        <div id="outputCode" class="output"></div>
+        <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+
+    <script>
+        // Function to unminify code based on type
+        function unminifyCode() {
+            const inputCode = document.getElementById('inputCode').value;
+            const codeType = document.getElementById('codeType').value;
+
+            if (!inputCode.trim()) {
+                alert('Please enter code to unminify!');
+                return;
+            }
+
+            let unminifiedCode;
+
+            try {
+                // Unminify based on selected type
+                if (codeType === 'js') {
+                    unminifiedCode = js_beautify(inputCode, {
+                        indent_size: 4,
+                        space_in_empty_paren: true
+                    });
+                } else if (codeType === 'css') {
+                    unminifiedCode = css_beautify(inputCode, {
+                        indent_size: 4
+                    });
+                } else if (codeType === 'html') {
+                    unminifiedCode = html_beautify(inputCode, {
+                        indent_size: 4,
+                        wrap_line_length: 80
+                    });
+                }
+
+                // Display unminified code
+                document.getElementById('outputCode').textContent = unminifiedCode;
+            } catch (error) {
+                alert('Error unminifying code: ' + error.message);
+            }
+        }
+
+        // Function to copy unminified code to clipboard
+        function copyToClipboard() {
+            const outputCode = document.getElementById('outputCode').textContent;
+
+            if (!outputCode.trim()) {
+                alert('No unminified code to copy!');
+                return;
+            }
+
+            navigator.clipboard.writeText(outputCode).then(() => {
+                alert('Unminified code copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+
+</body>
+</html>
